@@ -4,6 +4,7 @@ import * as React from "react";
 import { LeftMenuLinks } from "./navigation/left-menu-links";
 import { HomePage } from "./home/people-page";
 import { PeoplePage } from "./people/people-page";
+import { PeopleGroupsPage } from "./people-groups/people-groups-page";
 
 export function App(): React.ReactElement {
   return (
@@ -19,6 +20,7 @@ export function App(): React.ReactElement {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/people" element={<PeoplePage />} />
+              <Route path="/people-groups" element={<PeopleGroupsPage />} />
             </Routes>
           </div>
         </div>

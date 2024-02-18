@@ -1,85 +1,54 @@
 import { useEffect, useState } from "react";
-import { PeopleService, Person } from "./people-service";
-import { AddPersonComponent } from "./add-person.component";
+import { PeopleGroupService, PeopleGroup } from "./people-groups-service";
+import { AddGroupComponent } from "./add-group.component";
 import { NavLink } from "react-router-dom";
-import {
-  PeopleGroup,
-  PeopleGroupService,
-} from "../people-groups/people-groups-service";
 
-function listToHashMap<T extends { [key: string]: any }, K extends keyof T>(
-  list: T[],
-  key: K,
-): { [key: string]: T } {
-  const hashMap: { [key: string]: T } = {};
-
-  list.forEach((item) => {
-    const itemKey = String(item[key]); // Ensure the key is a string
-    hashMap[itemKey] = item;
-  });
-
-  return hashMap;
-}
-
-export function PeoplePage(): React.ReactElement {
+export function PeopleGroupsPage(): React.ReactElement {
   const [isLoading, setLoading] = useState(false);
-  const [people, setPeople] = useState<Person[]>([]);
-  const [groupsByID, setGroupsByID] = useState<{ [id: string]: PeopleGroup }>(
-    {},
-  );
-  const [menuOpenForPerson, setMenuOpenForPerson] = useState<string | null>(
-    null,
-  );
+  const [groups, setGroups] = useState<PeopleGroup[]>([]);
+  const [menuOpenForGroup, setMenuOpenForGroup] = useState<string | null>(null);
 
-  const loadPeople = async () => {
+  const loadItems = async () => {
     setLoading(true);
-    const peopleService = new PeopleService();
+    const peopleService = new PeopleGroupService();
     const people = await peopleService.listAll();
     setLoading(false);
-    setPeople(people);
+    setGroups(people);
   };
 
-  const loadGroups = async () => {
-    const groupsService = new PeopleGroupService();
-    const groups = await groupsService.listAll();
-    setGroupsByID(listToHashMap(groups, "id"));
-  };
-
-  const openPersonActionsMenu = (
+  const openItemActionsMenu = (
     e: React.MouseEvent<HTMLElement, MouseEvent>,
     personID: string,
   ) => {
     e.stopPropagation();
-    setMenuOpenForPerson(personID);
+    setMenuOpenForGroup(personID);
   };
-  const hidePersonActionsMenu = () => {
-    setMenuOpenForPerson(null);
+  const hideItemActionsMenu = () => {
+    setMenuOpenForGroup(null);
   };
 
-  const deletePerson = async (personID: string) => {
-    console.log("delete person", personID);
-    const personeService = new PeopleService();
+  const deleteItem = async (personID: string) => {
+    const personeService = new PeopleGroupService();
     await personeService.deleteOne(personID);
-    loadPeople();
+    loadItems();
   };
 
   useEffect(() => {
-    loadPeople();
-    loadGroups();
+    loadItems();
   }, []);
 
   return (
     <div
       className="single-page-container"
-      onClick={hidePersonActionsMenu}
+      onClick={hideItemActionsMenu}
       data-testid="people-page-container"
     >
       <div className="content-block">
         <div className="content-section">
-          <h1>People</h1>
+          <h1>Groups</h1>
         </div>
         <div className="content-section">
-          <NavLink to="/people-groups">Manage groups</NavLink>
+          <NavLink to="/people">🔙 Back to people</NavLink>
         </div>
         <div className="content-section">
           {isLoading && <div>Loading...</div>}
@@ -87,31 +56,27 @@ export function PeoplePage(): React.ReactElement {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Group</th>
+                  <th>Group name</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {people.map((p: Person) => {
+                {groups.map((p: PeopleGroup) => {
                   return (
-                    <tr data-testid={`person-${p.id}`} key={`person-${p.id}`}>
+                    <tr data-testid={`group-${p.id}`} key={`group-${p.id}`}>
                       <td data-entityid={p.id}>{p.name}</td>
-                      <td>{p.attributes.email}</td>
-                      <td>{groupsByID[p.attributes.groupID]?.name}</td>
                       <td>
                         <div
-                          data-testid={`person-actions-dropdown-menu-${p.id}`}
+                          data-testid={`people-group-actions-dropdown-menu-${p.id}`}
                           className={
-                            menuOpenForPerson === p.id
+                            menuOpenForGroup === p.id
                               ? "dropdown-menu open"
                               : "dropdown-menu"
                           }
                         >
                           <button
                             className="simple-button dropdown-button"
-                            onClick={(e) => openPersonActionsMenu(e, p.id)}
+                            onClick={(e) => openItemActionsMenu(e, p.id)}
                             data-testid={`person-actions-menu-button-${p.id}`}
                           >
                             <span className="material-symbols-outlined">
@@ -123,7 +88,7 @@ export function PeoplePage(): React.ReactElement {
                               <li className="warning-action">
                                 <a
                                   href="#"
-                                  onClick={() => deletePerson(p.id)}
+                                  onClick={() => deleteItem(p.id)}
                                   data-testid={`action-delete-person-${p.id}`}
                                 >
                                   Delete this person entry
@@ -141,7 +106,7 @@ export function PeoplePage(): React.ReactElement {
           )}
         </div>
         <div className="content-section">
-          <AddPersonComponent onPersonAdded={loadPeople} />
+          <AddGroupComponent onItemAdded={loadItems} />
         </div>
       </div>
     </div>

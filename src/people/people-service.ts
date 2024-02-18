@@ -8,6 +8,7 @@ export interface Person {
   name: string;
   attributes: {
     email: string;
+    groupID: string;
   };
 }
 

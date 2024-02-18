@@ -61,7 +61,8 @@ h2.menu-header {
 .content-block {
   padding: 20px 60px;
 }
-.form-field-block {
+.form-field-block,
+.content-section {
   margin-bottom: 18px;
 }
 .top-bar {
