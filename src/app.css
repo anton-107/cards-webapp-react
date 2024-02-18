@@ -1,4 +1,128 @@
+html,
 body {
-  background-color: #030303;
-  color: #fafafa;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  background-color: #f9f8f8;
+  overflow-x: hidden;
+  width: 100vw;
+}
+.layout {
+  display: flex;
+}
+.vertical-menu {
+  background-color: #000;
+  color: #fff;
+  width: 250px;
+  height: 100vh;
+}
+.content {
+  flex: 1;
+  height: 100vh;
+  padding: 0 0 30px;
+  overflow: auto;
+}
+.menu-block {
+  padding-left: 30px;
+  font-size: 1em;
+}
+.menu-links {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.menu-links li {
+  margin: 0;
+}
+.menu-links li a {
+  display: block;
+  padding-left: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: #fff;
+}
+.menu-links li a:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.menu-links li a.active-nav-link,
+.menu-links li a.active-nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.32);
+}
+.menu-header {
+  font-size: 1.2em;
+  line-height: 2.4em;
+}
+h2.menu-header {
+  font-size: 1em;
+  line-height: 2em;
+}
+.content-block {
+  padding: 20px 60px;
+}
+.form-field-block {
+  margin-bottom: 18px;
+}
+.top-bar {
+  border-bottom: 1px solid #eceae9;
+  display: flex;
+}
+.top-bar-section {
+  flex: 1;
+  padding: 10px;
+}
+.top-bar-section-side {
+  padding: 10px;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.form-button {
+  font-size: 1em;
+  background-color: darkblue;
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  padding: 5px 15px;
+  cursor: pointer;
+}
+.form-button-secondary {
+  background-color: white;
+  color: #333;
+  border: 1px solid #333;
+}
+.simple-button {
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  padding: 5px;
+  cursor: pointer;
+}
+.simple-button:hover {
+  background-color: #e3e3e3;
+}
+.data-table {
+  width: 100%;
+}
+.data-table th {
+  text-align: left;
+  vertical-align: top;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fefefe;
+  padding: 5px;
+}
+.data-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px;
+}
+.data-table .table-header-link {
+  color: white;
+}
+.note-placeholder {
+  height: 30px;
 }
