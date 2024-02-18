@@ -126,3 +126,69 @@ a:hover {
 .note-placeholder {
   height: 30px;
 }
+
+/* dropdowns */
+.details-top-menu {
+  display: flex;
+  border-bottom: 1px solid #eceae9;
+  padding: 5px;
+}
+.details-top-menu-left {
+  flex: 1;
+}
+.dropdown-menu {
+  position: relative;
+}
+.dropdown-content {
+  position: absolute;
+  /* z-index: 1; */
+  left: 0;
+  width: 175px;
+  background-color: #fff;
+  border: 1px solid #eceae9;
+  border-radius: 3px;
+  display: none;
+  z-index: 100;
+}
+.dropdown-menu.open .dropdown-content {
+  display: block;
+}
+.dropdown-menu.open .simple-button {
+  background-color: #e3e3e3;
+}
+
+.actions-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.actions-list li {
+  padding: 0;
+  margin: 0;
+}
+.actions-list li a {
+  display: block;
+  border-bottom: 1px solid #eceae9;
+  padding: 5px 10px;
+  color: #333;
+}
+.actions-list li.warning-action a {
+  color: #ee0000;
+}
+.actions-list li a:hover {
+  text-decoration: none;
+  background-color: #eceae9;
+}
+.note-content-edit-input {
+  font-size: 2em;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+}
+.note-content-edit-input:hover {
+  background-color: #fff;
+  border: 1px solid #eceae9;
+}
+.dropdown-button {
+  padding-bottom: 0;
+}

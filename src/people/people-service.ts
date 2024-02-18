@@ -1,53 +1,46 @@
+import {
+  CardsCRUDApi,
+  CreateCardDto,
+} from "cards-webserver-client-ts-axios/dist/api";
+
 export interface Person {
   id: string;
   name: string;
-  email: string;
+  attributes: {
+    email: string;
+  };
 }
 
-export interface AddPersonRequest {
-  "person-name": string;
-  "person-email": string;
-}
+export type PersonCreationRequest = Omit<Person, "id">;
+
+export type AddPersonRequest = CreateCardDto;
 
 const API_ROOT = `http://localhost:3000`;
+const api = new CardsCRUDApi({ isJsonMime: () => true }, API_ROOT);
 
 export class PeopleService {
   public async listAll(): Promise<Person[]> {
-    const request = await fetch(`${API_ROOT}/card/checkbox`, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
+    const resp = await api.cardControllerFindAll({
+      type: "person",
     });
-    const resp = await request.json();
-    return resp;
+    return resp.data as unknown as Person[];
   }
-  public async addOne(person: AddPersonRequest) {
-    const request = await fetch(`${API_ROOT}/person`, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
+  public async addOne(person: PersonCreationRequest) {
+    const resp = await api.cardControllerCreate({
+      type: "person",
+      createCardDto: {
+        ...person,
+        spaceID: "space-1",
+        parentTaskID: "",
       },
-      body: JSON.stringify(person),
-      credentials: "include",
     });
-    const resp = await request.json();
-    return resp;
+    return resp.data as unknown as Person[];
   }
   public async deleteOne(personID: string) {
-    const request = await fetch(`${API_ROOT}/delete-person`, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ "person-id": personID }),
-      credentials: "include",
+    const resp = await api.cardControllerRemove({
+      type: "person",
+      id: personID,
     });
-    const resp = await request.json();
-    return resp;
+    return resp.data as unknown as Person[];
   }
 }
