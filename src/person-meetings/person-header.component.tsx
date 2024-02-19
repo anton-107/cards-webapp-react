@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Person } from "../people/people-service";
 
 interface PersonHeaderComponentProperties {
