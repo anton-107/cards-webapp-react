@@ -32,6 +32,7 @@ body {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  margin-bottom: 2.5em;
 }
 .menu-links li {
   margin: 0;
@@ -51,12 +52,16 @@ body {
   background-color: rgba(255, 255, 255, 0.32);
 }
 .menu-header {
-  font-size: 1.2em;
+  font-size: 1.4em;
   line-height: 2.4em;
 }
 h2.menu-header {
+  font-size: 1.2em;
+  line-height: 1.5em;
+}
+h3.menu-header {
   font-size: 1em;
-  line-height: 2em;
+  line-height: 0.5em;
 }
 .content-block {
   padding: 20px 60px;

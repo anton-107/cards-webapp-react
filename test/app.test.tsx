@@ -8,7 +8,7 @@ describe("App", () => {
   it("should show a sign in form if not authenticated", async () => {
     const component = render(<App />);
     await waitFor(() => screen.getByTestId("greeting"));
-    expect(screen.getByTestId("greeting").textContent).toBe("Cards!");
+    expect(screen.getByTestId("greeting").textContent).toBe("Cards app");
     component.unmount();
   });
 });

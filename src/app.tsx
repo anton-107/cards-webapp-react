@@ -5,6 +5,7 @@ import { LeftMenuLinks } from "./navigation/left-menu-links";
 import { HomePage } from "./home/people-page";
 import { PeoplePage } from "./people/people-page";
 import { PeopleGroupsPage } from "./people-groups/people-groups-page";
+import { LeftMenuPeopleGroups } from "./navigation/left-menu-people-groups";
 
 export function App(): React.ReactElement {
   return (
@@ -12,8 +13,9 @@ export function App(): React.ReactElement {
       <div id="app-root">
         <div className="layout">
           <div className="vertical-menu">
-            <h1 className="menu-block menu-header">Cards app</h1>
+            <h1 className="menu-block menu-header" data-testid="greeting">Cards app</h1>
             <LeftMenuLinks />
+            <LeftMenuPeopleGroups />
           </div>
 
           <div className="content">
