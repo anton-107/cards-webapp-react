@@ -26,6 +26,13 @@ export class PeopleService {
     });
     return resp.data as unknown as Person[];
   }
+  public async getOne(personID: string): Promise<Person> {
+    const resp = await api.cardControllerFindOne({
+      id: personID,
+      type: "person",
+    });
+    return resp.data as unknown as Person;
+  }
   public async addOne(person: PersonCreationRequest) {
     const resp = await api.cardControllerCreate({
       type: "person",

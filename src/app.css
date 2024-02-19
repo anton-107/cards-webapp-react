@@ -198,3 +198,21 @@ a:hover {
 .dropdown-button {
   padding-bottom: 0;
 }
+/* horizontal menu */
+.horizontal-menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eceae9;
+}
+.horizontal-menu li {
+  display: inline-block;
+}
+.horizontal-menu li a {
+  padding: 5px 10px 10px;
+}
+.horizontal-menu li .active-nav-link {
+  font-weight: bold;
+  border-bottom: 2px solid black;
+}

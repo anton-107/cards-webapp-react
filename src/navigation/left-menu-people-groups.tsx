@@ -34,7 +34,7 @@ export function LeftMenuPeopleGroups(): React.ReactElement {
       <div className="menu-block">
         {groups.map((group: PeopleGroup) => {
           return (
-            <div>
+            <div key={`group-${group.id}`}>
               <h3 className="menu-header">{group.name}</h3>
               <ul className="menu-links">
                 {people
