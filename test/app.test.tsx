@@ -4,12 +4,12 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { App } from "../src/app";
 
-jest.mock('cards-webserver-client-ts-axios/dist/api', () => {
+jest.mock("cards-webserver-client-ts-axios/dist/api", () => {
   return {
     CardsCRUDApi: jest.fn().mockImplementation(() => {
       return {
         cardControllerFindAll: jest.fn(() => {
-          return { data: []}
+          return { data: [] };
         }),
       };
     }),
