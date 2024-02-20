@@ -12,7 +12,7 @@ export function MeetingsListComponent(
     <div>
       {props.meetings.map((meeting) => {
         return (
-          <div key={`meeting-${meeting.id}`}>
+          <div key={`meeting-${meeting.id}`} className="content-box">
             {meeting.name} on {meeting.attributes.dateStart} (#{meeting.id},{" "}
             {meeting.attributes.createdAt})
           </div>

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { PeopleService, Person } from "./../people/people-service";
 import { PersonHeaderComponent } from "./person-header.component";
-import { MeetingsListComponent } from "./meetings-list.components";
+import { MeetingsListComponent } from "./meetings-list.component";
 import { Meeting, MeetingsService } from "./meetings-service";
 import { AddNewMeetingComponent } from "./add-new-meeting.component";
 
@@ -39,7 +39,7 @@ export function PersonMeetingsPage(): React.ReactElement {
       {personID && person && (
         <div>
           <PersonHeaderComponent person={person} />
-          <div className="content-block">
+          <div className="content-block content-block-box-container">
             <AddNewMeetingComponent
               person={person}
               onMeetingAdded={() => loadMeetings(personID)}
