@@ -6,6 +6,7 @@ const api = new CardsCRUDApi({ isJsonMime: () => true }, API_ROOT);
 export interface Card {
   id: string;
   name: string;
+  parentCardID: string | "";
   attributes: { [key: string]: string | number | boolean | null };
 }
 
@@ -15,6 +16,14 @@ export abstract class CardCRUDService<T extends Card> {
   public async listAll(): Promise<T[]> {
     const resp = await api.cardControllerFindAll({
       type: this.type,
+    });
+    return resp.data as unknown as T[];
+  }
+
+  public async listForParent(parentCardID: string): Promise<T[]> {
+    const resp = await api.cardControllerFindChildren({
+      type: this.type,
+      parentID: parentCardID,
     });
     return resp.data as unknown as T[];
   }
@@ -31,7 +40,6 @@ export abstract class CardCRUDService<T extends Card> {
       createCardDto: {
         ...addRequest,
         spaceID: "space-1",
-        parentTaskID: "",
       },
     });
     return resp.data as unknown as T[];

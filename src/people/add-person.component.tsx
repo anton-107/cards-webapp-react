@@ -30,6 +30,7 @@ export function AddPersonComponent(
     setInputDisabled(true);
     await peopleService.addOne({
       name: personName,
+      parentCardID: "",
       attributes: {
         email: personEmail,
         groupID: personGroupID,

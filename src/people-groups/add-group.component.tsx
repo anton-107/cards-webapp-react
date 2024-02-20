@@ -21,6 +21,7 @@ export function AddGroupComponent(
     setInputDisabled(true);
     await peopleService.addOne({
       name: groupName,
+      parentCardID: "",
       attributes: {},
     });
     setInputDisabled(false);

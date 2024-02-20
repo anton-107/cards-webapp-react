@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
-    "run:dev": "vite",
+    "start:dev": "vite",
     "preview": "vite preview",
     "test": "jest",
     "test:coverage": "jest --coverage",

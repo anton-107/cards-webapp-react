@@ -1,11 +1,23 @@
 import * as React from "react";
+import { Meeting } from "./meetings-service";
 
 interface MeetingsListComponentProperties {
-  mettings: Meeting[];
+  meetings: Meeting[];
 }
 
 export function MeetingsListComponent(
   props: MeetingsListComponentProperties,
 ): React.ReactElement {
-  return <div>List of meetings</div>;
+  return (
+    <div>
+      {props.meetings.map((meeting) => {
+        return (
+          <div key={`meeting-${meeting.id}`}>
+            {meeting.name} on {meeting.attributes.dateStart} (#{meeting.id},{" "}
+            {meeting.attributes.createdAt})
+          </div>
+        );
+      })}
+    </div>
+  );
 }
