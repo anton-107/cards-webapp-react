@@ -24,8 +24,12 @@ export function PersonObjectivesPage(): React.ReactElement {
 
   return (
     <div className="single-page-container">
-      {person && <PersonHeaderComponent person={person} />}
-      <div className="content-block">Objectives</div>
+      {person && (
+        <div>
+          <PersonHeaderComponent person={person} />
+          <div className="content-block">Objectives</div>
+        </div>
+      )}
     </div>
   );
 }
