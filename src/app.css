@@ -17,6 +17,7 @@ body {
   color: #fff;
   width: 250px;
   height: 100vh;
+  overflow-y: scroll;
 }
 .content {
   flex: 1;
