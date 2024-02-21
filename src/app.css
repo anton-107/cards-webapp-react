@@ -228,3 +228,9 @@ a:hover {
   margin-bottom: 18px;
   padding: 18px;
 }
+/* text-editing */
+.lightweight-textarea {
+  border: none;
+  border-bottom: 1px solid #b0abac;
+  padding: 3px;
+}
