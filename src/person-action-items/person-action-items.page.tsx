@@ -27,7 +27,9 @@ export function PersonActionItemsPage(): React.ReactElement {
       {person && (
         <div>
           <PersonHeaderComponent person={person} />
-          <div className="content-block">Action items from meetings will appear here</div>
+          <div className="content-block">
+            Action items from meetings will appear here
+          </div>
         </div>
       )}
     </div>
