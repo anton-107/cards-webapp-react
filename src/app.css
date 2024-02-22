@@ -229,8 +229,17 @@ a:hover {
   padding: 18px;
 }
 /* text-editing */
-.lightweight-textarea {
+.lightweight-textarea,
+.lightweight-editor-checkbox {
   border: none;
   border-bottom: 1px solid #b0abac;
   padding: 3px;
+}
+.lightweight-editor-checkbox {
+  border-bottom: none;
+  vertical-align: middle;
+}
+.lightweight-editor-checkbox {
+  display: inline-block;
+  vertical-align: middle;
 }

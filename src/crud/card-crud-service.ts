@@ -1,4 +1,7 @@
-import { CardsCRUDApi } from "cards-webserver-client-ts-axios/dist/api";
+import {
+  CardsCRUDApi,
+  UpdateCardDto,
+} from "cards-webserver-client-ts-axios/dist/api";
 
 const API_ROOT = `http://localhost:3000`;
 const api = new CardsCRUDApi({ isJsonMime: () => true }, API_ROOT);
@@ -8,6 +11,11 @@ export interface Card {
   name: string;
   parentCardID: string | "";
   attributes: { [key: string]: string | number | boolean | null };
+}
+
+interface CardUpdateRecord extends UpdateCardDto {
+  id?: string;
+  type?: string;
 }
 
 export abstract class CardCRUDService<T extends Card> {
@@ -41,6 +49,17 @@ export abstract class CardCRUDService<T extends Card> {
         ...addRequest,
         spaceID: "space-1",
       },
+    });
+    return resp.data as unknown as T[];
+  }
+  public async updateOne(updateRequest: T) {
+    const dto: CardUpdateRecord = { ...updateRequest, spaceID: "space-1" };
+    delete dto.id;
+    delete dto.type;
+    const resp = await api.cardControllerUpdate({
+      id: updateRequest.id,
+      type: this.type,
+      updateCardDto: dto,
     });
     return resp.data as unknown as T[];
   }

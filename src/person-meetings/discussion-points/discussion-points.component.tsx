@@ -5,6 +5,7 @@ import {
   DiscussionPointsService,
 } from "./discussion-points-service";
 import { useEffect, useRef, useState } from "react";
+import { DiscussionPointTextareaComponent } from "./discussion-point-textarea.component";
 
 interface MeetingsListComponentProperties {
   meeting: Meeting;
@@ -62,9 +63,10 @@ export function DiscussionPointsComponent(
       {discussionPoints.map((discussionPoint) => {
         return (
           <div key={`discussion-point-${discussionPoint.id}`}>
-            <input type="checkbox" />
-            {discussionPoint.attributes.content} (
-            {discussionPoint.attributes.order})
+            <input type="checkbox" className="lightweight-editor-checkbox" />
+            <DiscussionPointTextareaComponent
+              discussionPoint={discussionPoint}
+            />
           </div>
         );
       })}
