@@ -35,15 +35,23 @@ export function DiscussionPointTextareaComponent(
     STANDARD_DEBOUNCE_TIMEOUT_MS,
   );
 
-  const updateDiscussionPointTextOnEnter = async (
-    e: React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // save on enter:
     if (e.code === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (textareaElement) {
         textareaElement.current?.blur();
       }
       await debouncedUpdateDiscussionPoint();
+      return;
+    }
+    // blur on escape (will trigger save):
+    if (e.code === "Escape") {
+      e.preventDefault();
+      if (textareaElement) {
+        textareaElement.current?.blur();
+      }
+      return;
     }
   };
 
@@ -52,7 +60,7 @@ export function DiscussionPointTextareaComponent(
       ref={textareaElement}
       value={editedText || props.discussionPoint.attributes.content}
       onChange={(e) => setEditedText(e.target.value)}
-      onKeyDown={(e) => updateDiscussionPointTextOnEnter(e)}
+      onKeyDown={(e) => handleKeyDown(e)}
       onBlur={() => debouncedUpdateDiscussionPoint()}
       className="lightweight-textarea lightweight-editor-checkbox"
       rows={1}
