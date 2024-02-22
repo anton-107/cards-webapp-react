@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DiscussionPoint,
   DiscussionPointsService,
@@ -8,6 +8,9 @@ import { STANDARD_DEBOUNCE_TIMEOUT_MS, debounce } from "../../ui/debounce";
 
 interface DiscussionPointTextareaComponentProperties {
   discussionPoint: DiscussionPoint;
+  focusStartPosition: number | null;
+  onMoveToNext: (startPosition: number) => void;
+  onMoveToPrevious: (startPosition: number) => void;
 }
 
 export function DiscussionPointTextareaComponent(
@@ -53,7 +56,36 @@ export function DiscussionPointTextareaComponent(
       }
       return;
     }
+    // navigate to the next textarea:
+    if (e.code === "ArrowDown") {
+      e.preventDefault();
+      props.onMoveToNext(
+        textareaElement.current ? textareaElement.current.selectionStart : 0,
+      );
+    }
+    // navigate to the prev textarea:
+    if (e.code === "ArrowUp") {
+      e.preventDefault();
+      e.preventDefault();
+      props.onMoveToPrevious(
+        textareaElement.current ? textareaElement.current.selectionStart : 0,
+      );
+    }
   };
+
+  useEffect(() => {
+    if (props.focusStartPosition !== null) {
+      console.log(
+        "I need to focus on my textarea at",
+        props.focusStartPosition,
+      );
+      textareaElement.current?.focus();
+      textareaElement.current?.setSelectionRange(
+        props.focusStartPosition,
+        props.focusStartPosition,
+      );
+    }
+  }, [props.focusStartPosition]);
 
   return (
     <textarea

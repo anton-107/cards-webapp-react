@@ -20,6 +20,8 @@ export function DiscussionPointsComponent(
   const [discussionPoints, setDiscussionPoints] = useState<DiscussionPoint[]>(
     [],
   );
+  const [focusElementIndex, setFocusElementIndex] = useState<number>(-1);
+  const [focusStartPosition, setFocusStartPosition] = useState<number>(-1);
 
   const createDiscussionPoint = async (text: string) => {
     const service = new DiscussionPointsService();
@@ -54,18 +56,47 @@ export function DiscussionPointsComponent(
     setDiscussionPoints(points);
   };
 
+  const focusOnNextDiscussionPoint = (
+    currentIndex: number,
+    startPosition: number,
+  ) => {
+    if (discussionPoints.length > currentIndex + 1) {
+      setFocusElementIndex(currentIndex + 1);
+      setFocusStartPosition(startPosition);
+    }
+  };
+
+  const focusOnPreviousDiscussionPoint = (
+    currentIndex: number,
+    startPosition: number,
+  ) => {
+    if (currentIndex - 1 >= 0) {
+      setFocusElementIndex(currentIndex - 1);
+      setFocusStartPosition(startPosition);
+    }
+  };
+
   useEffect(() => {
     loadDiscussionPoints(props.meeting.id);
   }, []);
 
   return (
     <div>
-      {discussionPoints.map((discussionPoint) => {
+      {discussionPoints.map((discussionPoint, index) => {
         return (
           <div key={`discussion-point-${discussionPoint.id}`}>
             <input type="checkbox" className="lightweight-editor-checkbox" />
             <DiscussionPointTextareaComponent
               discussionPoint={discussionPoint}
+              onMoveToNext={(startPosition) =>
+                focusOnNextDiscussionPoint(index, startPosition)
+              }
+              onMoveToPrevious={(startPosition) =>
+                focusOnPreviousDiscussionPoint(index, startPosition)
+              }
+              focusStartPosition={
+                index === focusElementIndex ? focusStartPosition : null
+              }
             />
           </div>
         );
