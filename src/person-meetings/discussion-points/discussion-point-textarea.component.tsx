@@ -5,12 +5,13 @@ import {
   DiscussionPointsService,
 } from "./discussion-points-service";
 import { STANDARD_DEBOUNCE_TIMEOUT_MS, debounce } from "../../ui/debounce";
+import { END_OF_LINE_POSITION } from "./discussion-points.component";
 
 interface DiscussionPointTextareaComponentProperties {
   discussionPoint: DiscussionPoint;
   focusStartPosition: number | null;
-  onMoveToNext: (startPosition: number) => void;
-  onMoveToPrevious: (startPosition: number) => void;
+  onMoveToNext: (startPosition: number, isLastCharacter: boolean) => void;
+  onMoveToPrevious: (startPosition: number, isLastCharacter: boolean) => void;
 }
 
 export function DiscussionPointTextareaComponent(
@@ -61,6 +62,8 @@ export function DiscussionPointTextareaComponent(
       e.preventDefault();
       props.onMoveToNext(
         textareaElement.current ? textareaElement.current.selectionStart : 0,
+        textareaElement.current?.selectionStart ===
+          textareaElement.current?.value.length,
       );
     }
     // navigate to the prev textarea:
@@ -69,21 +72,25 @@ export function DiscussionPointTextareaComponent(
       e.preventDefault();
       props.onMoveToPrevious(
         textareaElement.current ? textareaElement.current.selectionStart : 0,
+        textareaElement.current?.selectionStart ===
+          textareaElement.current?.value.length,
       );
     }
   };
 
   useEffect(() => {
     if (props.focusStartPosition !== null) {
-      console.log(
-        "I need to focus on my textarea at",
-        props.focusStartPosition,
-      );
       textareaElement.current?.focus();
-      textareaElement.current?.setSelectionRange(
-        props.focusStartPosition,
-        props.focusStartPosition,
-      );
+
+      let startPosition = props.focusStartPosition;
+      if (
+        textareaElement.current &&
+        props.focusStartPosition === END_OF_LINE_POSITION
+      ) {
+        startPosition = textareaElement.current.value.length;
+      }
+
+      textareaElement.current?.setSelectionRange(startPosition, startPosition);
     }
   }, [props.focusStartPosition]);
 

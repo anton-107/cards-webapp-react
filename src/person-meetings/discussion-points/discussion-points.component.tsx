@@ -11,6 +11,8 @@ interface MeetingsListComponentProperties {
   meeting: Meeting;
 }
 
+export const END_OF_LINE_POSITION = -2;
+
 export function DiscussionPointsComponent(
   props: MeetingsListComponentProperties,
 ): React.ReactElement {
@@ -59,20 +61,22 @@ export function DiscussionPointsComponent(
   const focusOnNextDiscussionPoint = (
     currentIndex: number,
     startPosition: number,
+    isEndOfLine: boolean,
   ) => {
     if (discussionPoints.length > currentIndex + 1) {
       setFocusElementIndex(currentIndex + 1);
-      setFocusStartPosition(startPosition);
+      setFocusStartPosition(isEndOfLine ? END_OF_LINE_POSITION : startPosition);
     }
   };
 
   const focusOnPreviousDiscussionPoint = (
     currentIndex: number,
     startPosition: number,
+    isEndOfLine: boolean,
   ) => {
     if (currentIndex - 1 >= 0) {
       setFocusElementIndex(currentIndex - 1);
-      setFocusStartPosition(startPosition);
+      setFocusStartPosition(isEndOfLine ? END_OF_LINE_POSITION : startPosition);
     }
   };
 
@@ -88,11 +92,15 @@ export function DiscussionPointsComponent(
             <input type="checkbox" className="lightweight-editor-checkbox" />
             <DiscussionPointTextareaComponent
               discussionPoint={discussionPoint}
-              onMoveToNext={(startPosition) =>
-                focusOnNextDiscussionPoint(index, startPosition)
+              onMoveToNext={(startPosition, isEndOfLine) =>
+                focusOnNextDiscussionPoint(index, startPosition, isEndOfLine)
               }
-              onMoveToPrevious={(startPosition) =>
-                focusOnPreviousDiscussionPoint(index, startPosition)
+              onMoveToPrevious={(startPosition, isEndOfLine) =>
+                focusOnPreviousDiscussionPoint(
+                  index,
+                  startPosition,
+                  isEndOfLine,
+                )
               }
               focusStartPosition={
                 index === focusElementIndex ? focusStartPosition : null
