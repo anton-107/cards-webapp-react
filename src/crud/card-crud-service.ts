@@ -3,8 +3,7 @@ import {
   UpdateCardDto,
 } from "cards-webserver-client-ts-axios/dist/api";
 
-const API_ROOT = `http://localhost:3000`;
-const api = new CardsCRUDApi({ isJsonMime: () => true }, API_ROOT);
+import { API_ROOT } from "../environment";
 
 export interface Card {
   id: string;
@@ -21,29 +20,39 @@ interface CardUpdateRecord extends UpdateCardDto {
 export abstract class CardCRUDService<T extends Card> {
   abstract get type(): string;
 
+  private get api(): CardsCRUDApi {
+    return new CardsCRUDApi(
+      {
+        isJsonMime: () => true,
+        accessToken: localStorage.getItem("BEARER_TOKEN") || "",
+      },
+      API_ROOT,
+    );
+  }
+
   public async listAll(): Promise<T[]> {
-    const resp = await api.cardControllerFindAll({
+    const resp = await this.api.cardControllerFindAll({
       type: this.type,
     });
     return resp.data as unknown as T[];
   }
 
   public async listForParent(parentCardID: string): Promise<T[]> {
-    const resp = await api.cardControllerFindChildren({
+    const resp = await this.api.cardControllerFindChildren({
       type: this.type,
       parentID: parentCardID,
     });
     return resp.data as unknown as T[];
   }
   public async getOne(cardID: string): Promise<T> {
-    const resp = await api.cardControllerFindOne({
+    const resp = await this.api.cardControllerFindOne({
       id: cardID,
       type: this.type,
     });
     return resp.data as unknown as T;
   }
   public async addOne(addRequest: Omit<T, "id">) {
-    const resp = await api.cardControllerCreate({
+    const resp = await this.api.cardControllerCreate({
       type: this.type,
       createCardDto: {
         ...addRequest,
@@ -56,7 +65,7 @@ export abstract class CardCRUDService<T extends Card> {
     const dto: CardUpdateRecord = { ...updateRequest, spaceID: "space-1" };
     delete dto.id;
     delete dto.type;
-    const resp = await api.cardControllerUpdate({
+    const resp = await this.api.cardControllerUpdate({
       id: updateRequest.id,
       type: this.type,
       updateCardDto: dto,
@@ -64,7 +73,7 @@ export abstract class CardCRUDService<T extends Card> {
     return resp.data as unknown as T[];
   }
   public async deleteOne(cardID: string) {
-    const resp = await api.cardControllerRemove({
+    const resp = await this.api.cardControllerRemove({
       type: this.type,
       id: cardID,
     });
