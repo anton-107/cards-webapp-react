@@ -41,7 +41,9 @@ export function App(): React.ReactElement {
               <h1 className="menu-block menu-header" data-testid="greeting">
                 Cards app
               </h1>
+              <div className="menu-separator"></div>
               <LeftMenuLinks />
+              <div className="menu-separator"></div>
               <LeftMenuPeopleGroups />
             </div>
           )}

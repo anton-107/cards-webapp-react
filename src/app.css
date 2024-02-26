@@ -13,7 +13,7 @@ body {
   display: flex;
 }
 .vertical-menu {
-  background-color: #000;
+  background-color: #2e2e30;
   color: #fff;
   width: 250px;
   height: 100vh;
@@ -26,39 +26,47 @@ body {
   overflow: auto;
 }
 .menu-block {
-  padding-left: 30px;
+  padding-left: 0px;
   font-size: 1em;
+}
+.menu-separator {
+  border-top: 1px solid #2e2e30;
+  border-bottom: 1px solid #424244;
+  margin: 1em 0;
 }
 .menu-links {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  margin-bottom: 2.5em;
+  font-size: 0.75em;
+  line-height: 0.4em;
 }
 .menu-links li {
   margin: 0;
+  margin-bottom: 1px;
 }
 .menu-links li a {
   display: block;
-  padding-left: 30px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  margin: 0 1em;
+  padding: 1em 1.5em;
   color: #fff;
+  border-radius: 5px;
 }
 .menu-links li a:hover {
   background-color: rgba(255, 255, 255, 0.08);
 }
 .menu-links li a.active-nav-link,
 .menu-links li a.active-nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.32);
+  background-color: #454547;
 }
 .menu-header {
-  font-size: 1.4em;
-  line-height: 2.4em;
+  font-size: 1.2em;
+  line-height: 2.2em;
+  padding-left: 30px;
 }
 h2.menu-header {
-  font-size: 1.2em;
-  line-height: 1.5em;
+  font-size: 1em;
+  line-height: 1.3em;
 }
 h3.menu-header {
   font-size: 0.8em;
