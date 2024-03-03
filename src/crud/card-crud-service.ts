@@ -31,7 +31,8 @@ export abstract class CardCRUDService<T extends Card> {
   }
 
   public async listAll(): Promise<T[]> {
-    const resp = await this.api.cardControllerFindAll({
+    const resp = await this.api.cardControllerFindAllInSpace({
+      spaceID: "space-1",
       type: this.type,
     });
     return resp.data as unknown as T[];
@@ -39,6 +40,7 @@ export abstract class CardCRUDService<T extends Card> {
 
   public async listForParent(parentCardID: string): Promise<T[]> {
     const resp = await this.api.cardControllerFindChildren({
+      spaceID: "space-1",
       type: this.type,
       parentID: parentCardID,
     });
@@ -46,6 +48,7 @@ export abstract class CardCRUDService<T extends Card> {
   }
   public async getOne(cardID: string): Promise<T> {
     const resp = await this.api.cardControllerFindOne({
+      spaceID: "space-1",
       id: cardID,
       type: this.type,
     });
@@ -74,6 +77,7 @@ export abstract class CardCRUDService<T extends Card> {
   }
   public async deleteOne(cardID: string) {
     const resp = await this.api.cardControllerRemove({
+      spaceID: "space-1",
       type: this.type,
       id: cardID,
     });
