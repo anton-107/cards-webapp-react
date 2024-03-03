@@ -38,9 +38,7 @@ export function App(): React.ReactElement {
         <div className="layout">
           {isAuthenticated && (
             <div className="vertical-menu">
-              <h1 className="menu-block menu-header" data-testid="greeting">
-                Cards app
-              </h1>
+              <h1 className="menu-block menu-header">Cards app</h1>
               <div className="menu-separator"></div>
               <LeftMenuLinks />
               <div className="menu-separator"></div>
