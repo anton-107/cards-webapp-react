@@ -6,8 +6,9 @@ import {
 } from "./discussion-points-service";
 import { useEffect, useRef, useState } from "react";
 import { DiscussionPointTextareaComponent } from "./discussion-point-textarea.component";
+import { SpaceProperties } from "../../space/space-props";
 
-interface MeetingsListComponentProperties {
+interface MeetingsListComponentProperties extends SpaceProperties {
   meeting: Meeting;
 }
 
@@ -28,7 +29,7 @@ export function DiscussionPointsComponent(
   const createDiscussionPoint = async (text: string) => {
     const service = new DiscussionPointsService();
     setNewDiscussionPointText("");
-    await service.addOne({
+    await service.addOne(props.spaceID, {
       name: `Discussion point for ${props.meeting.name}`,
       parentCardID: props.meeting.id,
       attributes: {
@@ -53,7 +54,7 @@ export function DiscussionPointsComponent(
 
   const loadDiscussionPoints = async (meetingID: string) => {
     const service = new DiscussionPointsService();
-    const points = await service.listForParent(meetingID);
+    const points = await service.listForParent(props.spaceID, meetingID);
     points.sort((a, b) => a.attributes.order - b.attributes.order);
     setDiscussionPoints(points);
   };
@@ -91,6 +92,7 @@ export function DiscussionPointsComponent(
           <div key={`discussion-point-${discussionPoint.id}`}>
             <input type="checkbox" className="lightweight-editor-checkbox" />
             <DiscussionPointTextareaComponent
+              spaceID={props.spaceID}
               discussionPoint={discussionPoint}
               onMoveToNext={(startPosition, isEndOfLine) =>
                 focusOnNextDiscussionPoint(index, startPosition, isEndOfLine)

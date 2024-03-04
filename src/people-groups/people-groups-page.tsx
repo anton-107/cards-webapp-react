@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { PeopleGroupService, PeopleGroup } from "./people-groups-service";
 import { AddGroupComponent } from "./add-group.component";
 import { NavLink } from "react-router-dom";
+import { SpaceProperties } from "../space/space-props";
 
-export function PeopleGroupsPage(): React.ReactElement {
+export function PeopleGroupsPage(props: SpaceProperties): React.ReactElement {
   const [isLoading, setLoading] = useState(false);
   const [groups, setGroups] = useState<PeopleGroup[]>([]);
   const [menuOpenForGroup, setMenuOpenForGroup] = useState<string | null>(null);
@@ -11,7 +12,7 @@ export function PeopleGroupsPage(): React.ReactElement {
   const loadItems = async () => {
     setLoading(true);
     const peopleService = new PeopleGroupService();
-    const people = await peopleService.listAll();
+    const people = await peopleService.listAll(props.spaceID);
     setLoading(false);
     setGroups(people);
   };
@@ -29,7 +30,7 @@ export function PeopleGroupsPage(): React.ReactElement {
 
   const deleteItem = async (personID: string) => {
     const personeService = new PeopleGroupService();
-    await personeService.deleteOne(personID);
+    await personeService.deleteOne(props.spaceID, personID);
     loadItems();
   };
 
@@ -106,7 +107,7 @@ export function PeopleGroupsPage(): React.ReactElement {
           )}
         </div>
         <div className="content-section">
-          <AddGroupComponent onItemAdded={loadItems} />
+          <AddGroupComponent onItemAdded={loadItems} spaceID={props.spaceID} />
         </div>
       </div>
     </div>

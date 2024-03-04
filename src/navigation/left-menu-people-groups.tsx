@@ -6,20 +6,23 @@ import {
   PeopleGroupService,
 } from "../people-groups/people-groups-service";
 import { useEffect, useState } from "react";
+import { SpaceProperties } from "../space/space-props";
 
-export function LeftMenuPeopleGroups(): React.ReactElement {
+export function LeftMenuPeopleGroups(
+  props: SpaceProperties,
+): React.ReactElement {
   const [people, setPeople] = useState<Person[]>([]);
   const [groups, setGroups] = useState<PeopleGroup[]>([]);
 
   const loadPeople = async () => {
     const peopleService = new PeopleService();
-    const people = await peopleService.listAll();
+    const people = await peopleService.listAll(props.spaceID);
     setPeople(people);
   };
 
   const loadGroups = async () => {
     const groupsService = new PeopleGroupService();
-    const groups = await groupsService.listAll();
+    const groups = await groupsService.listAll(props.spaceID);
     setGroups(groups);
   };
 

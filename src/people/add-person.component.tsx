@@ -6,8 +6,9 @@ import {
   PeopleGroup,
   PeopleGroupService,
 } from "../people-groups/people-groups-service";
+import { SpaceProperties } from "../space/space-props";
 
-interface AddPersonComponentProperties {
+interface AddPersonComponentProperties extends SpaceProperties {
   onPersonAdded: () => void;
 }
 
@@ -28,7 +29,7 @@ export function AddPersonComponent(
   const submitForm = async (e: FormEvent) => {
     e.preventDefault();
     setInputDisabled(true);
-    await peopleService.addOne({
+    await peopleService.addOne(props.spaceID, {
       name: personName,
       parentCardID: "",
       attributes: {
@@ -52,7 +53,7 @@ export function AddPersonComponent(
 
   const loadGroups = async () => {
     const service = new PeopleGroupService();
-    const groups = await service.listAll();
+    const groups = await service.listAll(props.spaceID);
     setGroups(groups);
   };
 

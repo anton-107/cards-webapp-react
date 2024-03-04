@@ -4,14 +4,17 @@ import { useParams } from "react-router-dom";
 
 import { PeopleService, Person } from "../people/people-service";
 import { PersonHeaderComponent } from "../person-meetings/person-header.component";
+import { SpaceProperties } from "../space/space-props";
 
-export function PersonObjectivesPage(): React.ReactElement {
+export function PersonObjectivesPage(
+  props: SpaceProperties,
+): React.ReactElement {
   const [person, setPerson] = useState<Person | null>(null);
   const { personID } = useParams();
 
   const loadPerson = async (personID: string) => {
     const peopleService = new PeopleService();
-    const person = await peopleService.getOne(personID);
+    const person = await peopleService.getOne(props.spaceID, personID);
     setPerson(person);
   };
 

@@ -1,8 +1,9 @@
 import * as React from "react";
 import { Person } from "../people/people-service";
 import { MeetingsService } from "./meetings-service";
+import { SpaceProperties } from "../space/space-props";
 
-interface AddNewMeetingComponentProperties {
+interface AddNewMeetingComponentProperties extends SpaceProperties {
   person: Person;
   onMeetingAdded: () => void;
 }
@@ -25,7 +26,7 @@ export function AddNewMeetingComponent(
   const createMeeting = async () => {
     const service = new MeetingsService();
     const dateStart = formatDate(new Date());
-    await service.addOne({
+    await service.addOne(props.spaceID, {
       name: `1x1 Meeting with ${props.person.name}`,
       parentCardID: props.person.id,
       attributes: {

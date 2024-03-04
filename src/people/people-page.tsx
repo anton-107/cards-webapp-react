@@ -6,6 +6,7 @@ import {
   PeopleGroup,
   PeopleGroupService,
 } from "../people-groups/people-groups-service";
+import { SpaceProperties } from "../space/space-props";
 
 function listToHashMap<T extends { [key: string]: any }, K extends keyof T>(
   list: T[],
@@ -21,7 +22,7 @@ function listToHashMap<T extends { [key: string]: any }, K extends keyof T>(
   return hashMap;
 }
 
-export function PeoplePage(): React.ReactElement {
+export function PeoplePage(props: SpaceProperties): React.ReactElement {
   const [isLoading, setLoading] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [groupsByID, setGroupsByID] = useState<{ [id: string]: PeopleGroup }>(
@@ -34,14 +35,14 @@ export function PeoplePage(): React.ReactElement {
   const loadPeople = async () => {
     setLoading(true);
     const peopleService = new PeopleService();
-    const people = await peopleService.listAll();
+    const people = await peopleService.listAll(props.spaceID);
     setLoading(false);
     setPeople(people);
   };
 
   const loadGroups = async () => {
     const groupsService = new PeopleGroupService();
-    const groups = await groupsService.listAll();
+    const groups = await groupsService.listAll(props.spaceID);
     setGroupsByID(listToHashMap(groups, "id"));
   };
 
@@ -59,7 +60,7 @@ export function PeoplePage(): React.ReactElement {
   const deletePerson = async (personID: string) => {
     console.log("delete person", personID);
     const personeService = new PeopleService();
-    await personeService.deleteOne(personID);
+    await personeService.deleteOne(props.spaceID, personID);
     loadPeople();
   };
 
@@ -141,7 +142,10 @@ export function PeoplePage(): React.ReactElement {
           )}
         </div>
         <div className="content-section">
-          <AddPersonComponent onPersonAdded={loadPeople} />
+          <AddPersonComponent
+            onPersonAdded={loadPeople}
+            spaceID={props.spaceID}
+          />
         </div>
       </div>
     </div>

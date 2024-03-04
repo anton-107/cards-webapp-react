@@ -2,8 +2,9 @@ import * as React from "react";
 import { FormEvent, useRef, useState } from "react";
 
 import { PeopleGroupService } from "./people-groups-service";
+import { SpaceProperties } from "../space/space-props";
 
-interface AddGroupComponentProperties {
+interface AddGroupComponentProperties extends SpaceProperties {
   onItemAdded: () => void;
 }
 
@@ -19,7 +20,7 @@ export function AddGroupComponent(
   const submitForm = async (e: FormEvent) => {
     e.preventDefault();
     setInputDisabled(true);
-    await peopleService.addOne({
+    await peopleService.addOne(props.spaceID, {
       name: groupName,
       parentCardID: "",
       attributes: {},

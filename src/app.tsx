@@ -19,6 +19,7 @@ export function App(): React.ReactElement {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [spaceID] = useState<string>("space-1");
 
   const checkCurrentUser = async () => {
     setIsCheckingAuth(true);
@@ -42,7 +43,7 @@ export function App(): React.ReactElement {
               <div className="menu-separator"></div>
               <LeftMenuLinks />
               <div className="menu-separator"></div>
-              <LeftMenuPeopleGroups />
+              <LeftMenuPeopleGroups spaceID={spaceID} />
             </div>
           )}
 
@@ -66,24 +67,30 @@ export function App(): React.ReactElement {
             {isAuthenticated && (
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/people" element={<PeoplePage />} />
+                <Route
+                  path="/people"
+                  element={<PeoplePage spaceID={spaceID} />}
+                />
                 <Route
                   path="/person/:personID"
-                  element={<PersonMeetingsPage />}
+                  element={<PersonMeetingsPage spaceID={spaceID} />}
                 />
                 <Route
                   path="/person/:personID/meetings"
-                  element={<PersonMeetingsPage />}
+                  element={<PersonMeetingsPage spaceID={spaceID} />}
                 />
                 <Route
                   path="/person/:personID/action-items"
-                  element={<PersonActionItemsPage />}
+                  element={<PersonActionItemsPage spaceID={spaceID} />}
                 />
                 <Route
                   path="/person/:personID/objectives"
-                  element={<PersonObjectivesPage />}
+                  element={<PersonObjectivesPage spaceID={spaceID} />}
                 />
-                <Route path="/people-groups" element={<PeopleGroupsPage />} />
+                <Route
+                  path="/people-groups"
+                  element={<PeopleGroupsPage spaceID={spaceID} />}
+                />
               </Routes>
             )}
           </div>

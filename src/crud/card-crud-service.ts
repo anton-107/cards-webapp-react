@@ -30,42 +30,45 @@ export abstract class CardCRUDService<T extends Card> {
     );
   }
 
-  public async listAll(): Promise<T[]> {
+  public async listAll(spaceID: string): Promise<T[]> {
     const resp = await this.api.cardControllerFindAllInSpace({
-      spaceID: "space-1",
+      spaceID,
       type: this.type,
     });
     return resp.data as unknown as T[];
   }
 
-  public async listForParent(parentCardID: string): Promise<T[]> {
+  public async listForParent(
+    spaceID: string,
+    parentCardID: string,
+  ): Promise<T[]> {
     const resp = await this.api.cardControllerFindChildren({
-      spaceID: "space-1",
+      spaceID,
       type: this.type,
       parentID: parentCardID,
     });
     return resp.data as unknown as T[];
   }
-  public async getOne(cardID: string): Promise<T> {
+  public async getOne(spaceID: string, cardID: string): Promise<T> {
     const resp = await this.api.cardControllerFindOne({
-      spaceID: "space-1",
+      spaceID,
       id: cardID,
       type: this.type,
     });
     return resp.data as unknown as T;
   }
-  public async addOne(addRequest: Omit<T, "id">) {
+  public async addOne(spaceID: string, addRequest: Omit<T, "id">) {
     const resp = await this.api.cardControllerCreate({
       type: this.type,
       createCardDto: {
         ...addRequest,
-        spaceID: "space-1",
+        spaceID,
       },
     });
     return resp.data as unknown as T[];
   }
-  public async updateOne(updateRequest: T) {
-    const dto: CardUpdateRecord = { ...updateRequest, spaceID: "space-1" };
+  public async updateOne(spaceID: string, updateRequest: T) {
+    const dto: CardUpdateRecord = { ...updateRequest, spaceID };
     delete dto.id;
     delete dto.type;
     const resp = await this.api.cardControllerUpdate({
@@ -75,9 +78,9 @@ export abstract class CardCRUDService<T extends Card> {
     });
     return resp.data as unknown as T[];
   }
-  public async deleteOne(cardID: string) {
+  public async deleteOne(spaceID: string, cardID: string) {
     const resp = await this.api.cardControllerRemove({
-      spaceID: "space-1",
+      spaceID,
       type: this.type,
       id: cardID,
     });

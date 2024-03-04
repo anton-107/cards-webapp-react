@@ -6,8 +6,9 @@ import {
 } from "./discussion-points-service";
 import { STANDARD_DEBOUNCE_TIMEOUT_MS, debounce } from "../../ui/debounce";
 import { END_OF_LINE_POSITION } from "./discussion-points.component";
+import { SpaceProperties } from "../../space/space-props";
 
-interface DiscussionPointTextareaComponentProperties {
+interface DiscussionPointTextareaComponentProperties extends SpaceProperties {
   discussionPoint: DiscussionPoint;
   focusStartPosition: number | null;
   onMoveToNext: (startPosition: number, isLastCharacter: boolean) => void;
@@ -25,7 +26,7 @@ export function DiscussionPointTextareaComponent(
       return;
     }
     const service = new DiscussionPointsService();
-    await service.updateOne({
+    await service.updateOne(props.spaceID, {
       ...props.discussionPoint,
       attributes: {
         ...props.discussionPoint.attributes,
