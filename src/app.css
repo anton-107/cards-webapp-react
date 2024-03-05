@@ -258,3 +258,17 @@ a:hover {
   display: inline-block;
   vertical-align: middle;
 }
+/* calendar */
+.inline-date {
+  display: inline-block;
+  border: 1px dotted transparent;
+  margin: 0 10px;
+  position: relative;
+}
+.inline-date:hover {
+  cursor: pointer;
+  border-color: #b0abac;
+}
+.popup-calendar {
+  position: absolute;
+}

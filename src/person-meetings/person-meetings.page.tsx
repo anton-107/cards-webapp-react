@@ -10,6 +10,7 @@ import { AddNewMeetingComponent } from "./add-new-meeting.component";
 import { SpaceProperties } from "../space/space-props";
 
 export function PersonMeetingsPage(props: SpaceProperties): React.ReactElement {
+  const meetingsService = new MeetingsService();
   const [person, setPerson] = useState<Person | null>(null);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const { personID } = useParams();
@@ -21,8 +22,10 @@ export function PersonMeetingsPage(props: SpaceProperties): React.ReactElement {
   };
 
   const loadMeetings = async (personID: string) => {
-    const service = new MeetingsService();
-    const meetings = await service.listForParent(props.spaceID, personID);
+    const meetings = await meetingsService.listForParent(
+      props.spaceID,
+      personID,
+    );
     meetings.sort((a, b) => b.attributes.createdAt - a.attributes.createdAt);
     setMeetings(meetings);
   };
@@ -36,8 +39,21 @@ export function PersonMeetingsPage(props: SpaceProperties): React.ReactElement {
   }, [location, personID]);
 
   const deleteMeeting = async (meetingID: string) => {
-    const service = new MeetingsService();
-    await service.deleteOne(props.spaceID, meetingID);
+    await meetingsService.deleteOne(props.spaceID, meetingID);
+    if (personID) {
+      loadMeetings(personID);
+    }
+  };
+
+  const updateMeetingStartDate = async (
+    meetingID: string,
+    newStartDate: number,
+  ) => {
+    await meetingsService.updateAttributes(props.spaceID, meetingID, {
+      attributes: {
+        dateStart: newStartDate,
+      },
+    });
     if (personID) {
       loadMeetings(personID);
     }
@@ -60,6 +76,7 @@ export function PersonMeetingsPage(props: SpaceProperties): React.ReactElement {
               onMeetingDeletionRequest={(meetingID: string) =>
                 deleteMeeting(meetingID)
               }
+              onMeetingStartDateChangeRequest={updateMeetingStartDate}
             />
           </div>
         </div>

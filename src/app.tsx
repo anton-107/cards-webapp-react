@@ -32,10 +32,12 @@ export function App(): React.ReactElement {
     setIsAuthenticated(resp.isAuthenticated);
     setUserName(resp.username);
     setIsCheckingAuth(false);
-    await findUserSpace();
   };
 
   const findUserSpace = async () => {
+    if (!isAuthenticated) {
+      return;
+    }
     const spaces = await spaceService.listAll();
     if (spaces.length < 1) {
       setSpaceWarningMessage(
@@ -56,6 +58,10 @@ export function App(): React.ReactElement {
   useEffect(() => {
     checkCurrentUser();
   }, []);
+
+  useEffect(() => {
+    findUserSpace();
+  }, [isAuthenticated]);
 
   return (
     <BrowserRouter>

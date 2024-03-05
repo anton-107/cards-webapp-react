@@ -3,30 +3,22 @@ import { Meeting } from "./meetings-service";
 import { DiscussionPointsComponent } from "./discussion-points/discussion-points.component";
 import { SpaceProperties } from "../space/space-props";
 import { MeetingsActionsComponent } from "./meetings-actions.component";
+import { MeetingDateComponent } from "./meeting-date.component";
 
 interface MeetingsListComponentProperties extends SpaceProperties {
   meetings: Meeting[];
   onMeetingDeletionRequest: (meetingID: string) => void;
+  onMeetingStartDateChangeRequest: (meetingID: string, newDate: number) => void;
 }
 
 export function MeetingsListComponent(
   props: MeetingsListComponentProperties,
 ): React.ReactElement {
-  const formatDate = (timestamp: number): string => {
-    const options: Intl.DateTimeFormatOptions = {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    };
-    try {
-      const date = new Date(timestamp);
-      return new Intl.DateTimeFormat("en-US", options).format(date);
-    } catch (err) {
-      return "Invalid date";
-    }
+  const updateMeetingStartDate = async (
+    meetingID: string,
+    newDate: number,
+  ): Promise<void> => {
+    props.onMeetingStartDateChangeRequest(meetingID, newDate);
   };
 
   return (
@@ -42,7 +34,16 @@ export function MeetingsListComponent(
                 }
               />
             </div>
-            {meeting.name} on {formatDate(meeting.attributes.dateStart)} (#
+            {meeting.name} on
+            <span>
+              <MeetingDateComponent
+                meeting={meeting}
+                onDateChange={(newDate: number) =>
+                  updateMeetingStartDate(meeting.id, newDate)
+                }
+              />
+            </span>
+            (#
             {meeting.id}, {meeting.attributes.createdAt})
             <h3>Discussion points</h3>
             <DiscussionPointsComponent

@@ -5,17 +5,21 @@ import {
 
 import { API_ROOT } from "../environment";
 
+type CardAttributes = { [key: string]: string | number | boolean | null };
+
 export interface Card {
   id: string;
   name: string;
   parentCardID: string | "";
-  attributes: { [key: string]: string | number | boolean | null };
+  attributes: CardAttributes;
 }
 
 interface CardUpdateRecord extends UpdateCardDto {
   id?: string;
   type?: string;
 }
+
+type AttributesType<T extends Card> = T["attributes"];
 
 export abstract class CardCRUDService<T extends Card> {
   abstract get type(): string;
@@ -65,7 +69,7 @@ export abstract class CardCRUDService<T extends Card> {
         spaceID,
       },
     });
-    return resp.data as unknown as T[];
+    return resp.data as unknown as T;
   }
   public async updateOne(spaceID: string, updateRequest: T) {
     const dto: CardUpdateRecord = { ...updateRequest, spaceID };
@@ -76,7 +80,22 @@ export abstract class CardCRUDService<T extends Card> {
       type: this.type,
       updateCardDto: dto,
     });
-    return resp.data as unknown as T[];
+    return resp.data as unknown as T;
+  }
+  public async updateAttributes(
+    spaceID: string,
+    cardID: string,
+    updateRequest: { attributes: Partial<AttributesType<T>> },
+  ) {
+    const resp = await this.api.cardControllerUpdateCardAttributes({
+      id: cardID,
+      type: this.type,
+      updateCardAttributesDto: {
+        spaceID,
+        attributes: updateRequest.attributes,
+      },
+    });
+    return resp.data as unknown as T;
   }
   public async deleteOne(spaceID: string, cardID: string) {
     const resp = await this.api.cardControllerRemove({
@@ -84,6 +103,6 @@ export abstract class CardCRUDService<T extends Card> {
       type: this.type,
       id: cardID,
     });
-    return resp.data as unknown as T[];
+    return resp.data as unknown as T;
   }
 }
