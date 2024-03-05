@@ -35,6 +35,14 @@ export function PersonMeetingsPage(props: SpaceProperties): React.ReactElement {
     setPerson(null);
   }, [location, personID]);
 
+  const deleteMeeting = async (meetingID: string) => {
+    const service = new MeetingsService();
+    await service.deleteOne(props.spaceID, meetingID);
+    if (personID) {
+      loadMeetings(personID);
+    }
+  };
+
   return (
     <div className="single-page-container">
       {personID && person && (
@@ -49,6 +57,9 @@ export function PersonMeetingsPage(props: SpaceProperties): React.ReactElement {
             <MeetingsListComponent
               meetings={meetings}
               spaceID={props.spaceID}
+              onMeetingDeletionRequest={(meetingID: string) =>
+                deleteMeeting(meetingID)
+              }
             />
           </div>
         </div>

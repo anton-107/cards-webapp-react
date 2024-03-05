@@ -143,6 +143,9 @@ a:hover {
 }
 
 /* dropdowns */
+.right-side {
+  float: right;
+}
 .details-top-menu {
   display: flex;
   border-bottom: 1px solid #eceae9;
@@ -164,6 +167,10 @@ a:hover {
   border-radius: 3px;
   display: none;
   z-index: 100;
+}
+.right-side .dropdown-content {
+  left: auto;
+  right: 0;
 }
 .dropdown-menu.open .dropdown-content {
   display: block;
