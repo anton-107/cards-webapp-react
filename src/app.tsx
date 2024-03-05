@@ -13,13 +13,18 @@ import { AuthService } from "./auth/auth-service";
 import { useEffect, useState } from "react";
 import { LoginForm } from "./auth/login-form";
 import { UserMenu } from "./auth/user-menu";
+import { SpaceService } from "./space/space-service";
 
 export function App(): React.ReactElement {
   const authService = new AuthService();
+  const spaceService = new SpaceService();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
-  const [spaceID] = useState<string>("space-1");
+  const [spaceID, setSpaceID] = useState<string | null>(null);
+  const [spaceWarningMessage, setSpaceWarningMessage] = useState<string | null>(
+    null,
+  );
 
   const checkCurrentUser = async () => {
     setIsCheckingAuth(true);
@@ -27,6 +32,25 @@ export function App(): React.ReactElement {
     setIsAuthenticated(resp.isAuthenticated);
     setUserName(resp.username);
     setIsCheckingAuth(false);
+    await findUserSpace();
+  };
+
+  const findUserSpace = async () => {
+    const spaces = await spaceService.listAll();
+    if (spaces.length < 1) {
+      setSpaceWarningMessage(
+        "You do not have spaces assigned to your username. Please contact your administrator",
+      );
+      return;
+    }
+    if (spaces.length > 1) {
+      setSpaceWarningMessage(
+        "You have more than one space assigned to your username. This application only supports a single space. Please contact your administrator",
+      );
+      return;
+    }
+    setSpaceID(spaces[0].spaceID);
+    setSpaceWarningMessage(null);
   };
 
   useEffect(() => {
@@ -43,7 +67,7 @@ export function App(): React.ReactElement {
               <div className="menu-separator"></div>
               <LeftMenuLinks />
               <div className="menu-separator"></div>
-              <LeftMenuPeopleGroups spaceID={spaceID} />
+              {spaceID && <LeftMenuPeopleGroups spaceID={spaceID} />}
             </div>
           )}
 
@@ -64,7 +88,13 @@ export function App(): React.ReactElement {
               </div>
             )}
 
-            {isAuthenticated && (
+            {spaceWarningMessage && (
+              <div className="content-block">
+                <strong>ATTENTION:</strong> ${spaceWarningMessage}
+              </div>
+            )}
+
+            {isAuthenticated && spaceID && (
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route

@@ -11,6 +11,13 @@ type MockResponse = {};
 
 jest.mock("cards-webserver-client-ts-axios/dist/api", () => {
   return {
+    SpaceCRUDApi: jest.fn().mockImplementation(() => {
+      return {
+        spaceControllerFindAll: jest.fn(() => {
+          return { data: { spaces: [{ spaceID: "test-space-1" }] } };
+        }),
+      };
+    }),
     CardsCRUDApi: jest.fn().mockImplementation(() => {
       return {
         cardControllerFindAllInSpace: jest.fn(() => {
