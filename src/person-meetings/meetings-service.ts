@@ -2,7 +2,7 @@ import { Card, CardCRUDService } from "../crud/card-crud-service";
 
 export interface Meeting extends Card {
   attributes: {
-    dateStart: string;
+    dateStart: number;
     createdAt: number;
   };
 }

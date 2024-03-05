@@ -11,26 +11,13 @@ interface AddNewMeetingComponentProperties extends SpaceProperties {
 export function AddNewMeetingComponent(
   props: AddNewMeetingComponentProperties,
 ): React.ReactElement {
-  const formatDate = (date: Date): string => {
-    const options: Intl.DateTimeFormatOptions = {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    };
-    return new Intl.DateTimeFormat("en-US", options).format(date);
-  };
-
   const createMeeting = async () => {
     const service = new MeetingsService();
-    const dateStart = formatDate(new Date());
     await service.addOne(props.spaceID, {
       name: `1x1 Meeting with ${props.person.name}`,
       parentCardID: props.person.id,
       attributes: {
-        dateStart: dateStart,
+        dateStart: Date.now(),
         createdAt: Date.now(),
       },
     });
