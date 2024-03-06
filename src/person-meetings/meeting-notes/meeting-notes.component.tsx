@@ -83,7 +83,7 @@ export function MeetingsNotesComponent(
     <div>
       {meetingNotes.map((meetingNote, index) => {
         return (
-          <div key={`discussion-point-${meetingNote.id}`}>
+          <div key={`meeting-note-${meetingNote.id}`}>
             <span>&bull; </span>
             <MeetingNoteTextareaComponent
               spaceID={props.spaceID}

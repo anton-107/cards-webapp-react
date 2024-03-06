@@ -5,6 +5,7 @@ import { SpaceProperties } from "../space/space-props";
 import { MeetingsActionsComponent } from "./meetings-actions.component";
 import { MeetingDateComponent } from "./meeting-date.component";
 import { MeetingsNotesComponent } from "./meeting-notes/meeting-notes.component";
+import { ActionItemsComponent } from "./action-items/action-items.component";
 
 interface MeetingsListComponentProperties extends SpaceProperties {
   meetings: Meeting[];
@@ -54,7 +55,7 @@ export function MeetingsListComponent(
             <h3>Notes</h3>
             <MeetingsNotesComponent meeting={meeting} spaceID={props.spaceID} />
             <h3>Action points</h3>
-            <p>...</p>
+            <ActionItemsComponent meeting={meeting} spaceID={props.spaceID} />
           </div>
         );
       })}
