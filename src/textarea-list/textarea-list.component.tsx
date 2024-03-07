@@ -2,16 +2,17 @@ import * as React from "react";
 import { useRef, useState } from "react";
 import { TextareaComponent } from "./textarea.component";
 
-interface TextItem {
+export interface TextItem {
   readonly id: string;
   readonly textValue: string;
 }
 
-interface TextareaListComponentProperties<T extends TextItem> {
+export interface TextareaListComponentProperties<T extends TextItem> {
   items: T[];
   newItemPlaceholder: string;
   onNewItemCreateRequest: (newItemText: string) => Promise<void>;
   onItemUpdateRequest: (itemID: string, editedText: string) => Promise<void>;
+  beforeTextareaElement: React.ReactElement;
 }
 
 export const END_OF_LINE_POSITION = -2;
@@ -68,7 +69,7 @@ export function TextareaListComponent<T extends TextItem>(
       {props.items.map((item, index) => {
         return (
           <div key={`textarea-list-item-${item.id}`}>
-            <span>&bull; </span>
+            {React.cloneElement(props.beforeTextareaElement, { item })}
             <TextareaComponent
               value={item.textValue}
               onItemUpdateRequest={(editedText: string) =>

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Meeting } from "../meetings-service";
 import { MeetingNote, MeetingNotesService } from "./meeting-notes-service";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SpaceProperties } from "../../space/space-props";
 import { TextareaListComponent } from "../../textarea-list/textarea-list.component";
 
@@ -64,6 +64,7 @@ export function MeetingsNotesComponent(
         newItemPlaceholder="New note"
         onNewItemCreateRequest={createMeetingNote}
         onItemUpdateRequest={updateMeetingNote}
+        beforeTextareaElement={<span>&bull; </span>}
       />
     </div>
   );

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { SpaceProperties } from "../../space/space-props";
-import { TextareaListComponent } from "../../textarea-list/textarea-list.component";
 import { Meeting } from "../meetings-service";
 import { ActionItem, ActionItemsService } from "./action-items-service";
+import { TextareaCheckboxListComponent } from "../../textarea-list/textarea-checkbox-list.component";
 
 interface ActionItemsComponentProperties extends SpaceProperties {
   meeting: Meeting;
 }
 
-class ActionItemText {
+class ActionItemCheckboxText {
   public readonly id: string;
 
   constructor(private actionItem: ActionItem) {
@@ -18,13 +18,17 @@ class ActionItemText {
   get textValue(): string {
     return this.actionItem.attributes.content;
   }
+
+  get isChecked(): boolean {
+    return this.actionItem.attributes.isComplete;
+  }
 }
 
 export function ActionItemsComponent(
   props: ActionItemsComponentProperties,
 ): React.ReactElement {
   const service = new ActionItemsService();
-  const [actionItems, setActionItems] = useState<ActionItemText[]>([]);
+  const [actionItems, setActionItems] = useState<ActionItemCheckboxText[]>([]);
 
   const createActionItem = async (text: string) => {
     console.log("createActionItem", text);
@@ -41,7 +45,7 @@ export function ActionItemsComponent(
     loadActionItems(props.meeting.id);
   };
 
-  const updateActionItem = async (itemID: string, text: string) => {
+  const updateActionItemText = async (itemID: string, text: string) => {
     await service.updateAttributes(props.spaceID, itemID, {
       attributes: {
         content: text,
@@ -49,10 +53,22 @@ export function ActionItemsComponent(
     });
   };
 
+  const updateActionItemCompleted = async (
+    itemID: string,
+    isComplete: boolean,
+  ) => {
+    console.log("updateActionItemCompleted", itemID, isComplete);
+    await service.updateAttributes(props.spaceID, itemID, {
+      attributes: {
+        isComplete,
+      },
+    });
+  };
+
   const loadActionItems = async (meetingID: string) => {
     const items = await service.listForParent(props.spaceID, meetingID);
     items.sort((a, b) => a.attributes.order - b.attributes.order);
-    setActionItems(items.map((x) => new ActionItemText(x)));
+    setActionItems(items.map((x) => new ActionItemCheckboxText(x)));
   };
 
   useEffect(() => {
@@ -61,11 +77,12 @@ export function ActionItemsComponent(
 
   return (
     <div>
-      <TextareaListComponent
+      <TextareaCheckboxListComponent
         items={actionItems}
         newItemPlaceholder="New action item"
         onNewItemCreateRequest={createActionItem}
-        onItemUpdateRequest={updateActionItem}
+        onItemUpdateRequest={updateActionItemText}
+        onCheckboxUpdateRequest={updateActionItemCompleted}
       />
     </div>
   );
