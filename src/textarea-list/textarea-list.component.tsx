@@ -25,6 +25,7 @@ export function TextareaListComponent<T extends TextItem>(
   const [focusStartPosition, setFocusStartPosition] = useState<number>(-1);
 
   const createItem = async (text: string) => {
+    setNewItemText("");
     props.onNewItemCreateRequest(text);
   };
   const updateItem = async (itemID: string, text: string) => {

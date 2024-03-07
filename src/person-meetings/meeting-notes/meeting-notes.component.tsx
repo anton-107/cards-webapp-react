@@ -3,28 +3,32 @@ import { Meeting } from "../meetings-service";
 import { MeetingNote, MeetingNotesService } from "./meeting-notes-service";
 import { useEffect, useRef, useState } from "react";
 import { SpaceProperties } from "../../space/space-props";
-import { MeetingNoteTextareaComponent } from "./meeting-note-textarea.component";
+import { TextareaListComponent } from "../../textarea-list/textarea-list.component";
 
 interface MeetingsListComponentProperties extends SpaceProperties {
   meeting: Meeting;
 }
 
-export const END_OF_LINE_POSITION = -2;
+class MeetingNoteText {
+  public readonly id: string;
+
+  constructor(private meetingNote: MeetingNote) {
+    this.id = meetingNote.id;
+  }
+
+  get textValue(): string {
+    return this.meetingNote.attributes.content;
+  }
+}
 
 export function MeetingsNotesComponent(
   props: MeetingsListComponentProperties,
 ): React.ReactElement {
-  const meetingNotesService = new MeetingNotesService();
-
-  const newPointElement = useRef(null);
-  const [newMeetingNoteText, setNewMeetingNoteText] = useState<string>("");
-  const [meetingNotes, setMeetingNotes] = useState<MeetingNote[]>([]);
-  const [focusElementIndex, setFocusElementIndex] = useState<number>(-1);
-  const [focusStartPosition, setFocusStartPosition] = useState<number>(-1);
+  const service = new MeetingNotesService();
+  const [meetingNotes, setMeetingNotes] = useState<MeetingNoteText[]>([]);
 
   const createMeetingNote = async (text: string) => {
-    setNewMeetingNoteText("");
-    await meetingNotesService.addOne(props.spaceID, {
+    await service.addOne(props.spaceID, {
       name: `Meeting note of ${props.meeting.name}`,
       parentCardID: props.meeting.id,
       attributes: {
@@ -35,44 +39,18 @@ export function MeetingsNotesComponent(
     loadMeetingNotes(props.meeting.id);
   };
 
-  const createOnEnter = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.code === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      if (newMeetingNoteText) {
-        await createMeetingNote(newMeetingNoteText);
-      }
-    }
+  const updateMeetingNote = async (itemID: string, text: string) => {
+    await service.updateAttributes(props.spaceID, itemID, {
+      attributes: {
+        content: text,
+      },
+    });
   };
 
   const loadMeetingNotes = async (meetingID: string) => {
-    const points = await meetingNotesService.listForParent(
-      props.spaceID,
-      meetingID,
-    );
-    points.sort((a, b) => a.attributes.order - b.attributes.order);
-    setMeetingNotes(points);
-  };
-
-  const focusOnNextMeetingNote = (
-    currentIndex: number,
-    startPosition: number,
-    isEndOfLine: boolean,
-  ) => {
-    if (meetingNotes.length > currentIndex + 1) {
-      setFocusElementIndex(currentIndex + 1);
-      setFocusStartPosition(isEndOfLine ? END_OF_LINE_POSITION : startPosition);
-    }
-  };
-
-  const focusOnPreviousMeetingNote = (
-    currentIndex: number,
-    startPosition: number,
-    isEndOfLine: boolean,
-  ) => {
-    if (currentIndex - 1 >= 0) {
-      setFocusElementIndex(currentIndex - 1);
-      setFocusStartPosition(isEndOfLine ? END_OF_LINE_POSITION : startPosition);
-    }
+    const items = await service.listForParent(props.spaceID, meetingID);
+    items.sort((a, b) => a.attributes.order - b.attributes.order);
+    setMeetingNotes(items.map((x) => new MeetingNoteText(x)));
   };
 
   useEffect(() => {
@@ -81,36 +59,12 @@ export function MeetingsNotesComponent(
 
   return (
     <div>
-      {meetingNotes.map((meetingNote, index) => {
-        return (
-          <div key={`meeting-note-${meetingNote.id}`}>
-            <span>&bull; </span>
-            <MeetingNoteTextareaComponent
-              spaceID={props.spaceID}
-              meetingNote={meetingNote}
-              onMoveToNext={(startPosition, isEndOfLine) =>
-                focusOnNextMeetingNote(index, startPosition, isEndOfLine)
-              }
-              onMoveToPrevious={(startPosition, isEndOfLine) =>
-                focusOnPreviousMeetingNote(index, startPosition, isEndOfLine)
-              }
-              focusStartPosition={
-                index === focusElementIndex ? focusStartPosition : null
-              }
-            />
-          </div>
-        );
-      })}
-      <textarea
-        ref={newPointElement}
-        value={newMeetingNoteText}
-        className="lightweight-textarea"
-        placeholder="New note"
-        rows={1}
-        cols={100}
-        onChange={(e) => setNewMeetingNoteText(e.target.value)}
-        onKeyDown={(e) => createOnEnter(e)}
-      ></textarea>
+      <TextareaListComponent
+        items={meetingNotes}
+        newItemPlaceholder="New note"
+        onNewItemCreateRequest={createMeetingNote}
+        onItemUpdateRequest={updateMeetingNote}
+      />
     </div>
   );
 }
