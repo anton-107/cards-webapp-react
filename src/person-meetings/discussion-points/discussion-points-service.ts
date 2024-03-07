@@ -2,7 +2,7 @@ import { Card, CardCRUDService } from "../../crud/card-crud-service";
 
 export interface DiscussionPoint extends Card {
   attributes: {
-    isComplete: false;
+    isComplete: boolean;
     order: number;
     content: string;
   };

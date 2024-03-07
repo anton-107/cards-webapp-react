@@ -31,8 +31,6 @@ export function ActionItemsComponent(
   const [actionItems, setActionItems] = useState<ActionItemCheckboxText[]>([]);
 
   const createActionItem = async (text: string) => {
-    console.log("createActionItem", text);
-
     await service.addOne(props.spaceID, {
       name: `Action item of ${props.meeting.name}`,
       parentCardID: props.meeting.id,
@@ -57,7 +55,6 @@ export function ActionItemsComponent(
     itemID: string,
     isComplete: boolean,
   ) => {
-    console.log("updateActionItemCompleted", itemID, isComplete);
     await service.updateAttributes(props.spaceID, itemID, {
       attributes: {
         isComplete,

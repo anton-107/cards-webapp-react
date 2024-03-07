@@ -1,36 +1,43 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
+import { SpaceProperties } from "../../space/space-props";
 import { Meeting } from "../meetings-service";
+import { TextareaCheckboxListComponent } from "../../textarea-list/textarea-checkbox-list.component";
 import {
   DiscussionPoint,
   DiscussionPointsService,
 } from "./discussion-points-service";
-import { useEffect, useRef, useState } from "react";
-import { DiscussionPointTextareaComponent } from "./discussion-point-textarea.component";
-import { SpaceProperties } from "../../space/space-props";
 
-interface MeetingsListComponentProperties extends SpaceProperties {
+interface DiscussionPointsComponentProperties extends SpaceProperties {
   meeting: Meeting;
 }
 
-export const END_OF_LINE_POSITION = -2;
+class DiscussionPointCheckboxText {
+  public readonly id: string;
+
+  constructor(private discussionPoint: DiscussionPoint) {
+    this.id = discussionPoint.id;
+  }
+
+  get textValue(): string {
+    return this.discussionPoint.attributes.content;
+  }
+
+  get isChecked(): boolean {
+    return this.discussionPoint.attributes.isComplete;
+  }
+}
 
 export function DiscussionPointsComponent(
-  props: MeetingsListComponentProperties,
+  props: DiscussionPointsComponentProperties,
 ): React.ReactElement {
-  const newPointElement = useRef(null);
-  const [newDiscussionPointText, setNewDiscussionPointText] =
-    useState<string>("");
-  const [discussionPoints, setDiscussionPoints] = useState<DiscussionPoint[]>(
-    [],
-  );
-  const [focusElementIndex, setFocusElementIndex] = useState<number>(-1);
-  const [focusStartPosition, setFocusStartPosition] = useState<number>(-1);
+  const service = new DiscussionPointsService();
+  const [discussionPoints, setDiscussionPoints] = useState<
+    DiscussionPointCheckboxText[]
+  >([]);
 
   const createDiscussionPoint = async (text: string) => {
-    const service = new DiscussionPointsService();
-    setNewDiscussionPointText("");
     await service.addOne(props.spaceID, {
-      name: `Discussion point for ${props.meeting.name}`,
+      name: `Discussion point of ${props.meeting.name}`,
       parentCardID: props.meeting.id,
       attributes: {
         isComplete: false,
@@ -41,44 +48,29 @@ export function DiscussionPointsComponent(
     loadDiscussionPoints(props.meeting.id);
   };
 
-  const createDiscussionPointOnEnter = async (
-    e: React.KeyboardEvent<HTMLTextAreaElement>,
+  const updateDiscussionPointText = async (itemID: string, text: string) => {
+    await service.updateAttributes(props.spaceID, itemID, {
+      attributes: {
+        content: text,
+      },
+    });
+  };
+
+  const updateDiscussionPointCompleted = async (
+    itemID: string,
+    isComplete: boolean,
   ) => {
-    if (e.code === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      if (newDiscussionPointText) {
-        await createDiscussionPoint(newDiscussionPointText);
-      }
-    }
+    await service.updateAttributes(props.spaceID, itemID, {
+      attributes: {
+        isComplete,
+      },
+    });
   };
 
   const loadDiscussionPoints = async (meetingID: string) => {
-    const service = new DiscussionPointsService();
-    const points = await service.listForParent(props.spaceID, meetingID);
-    points.sort((a, b) => a.attributes.order - b.attributes.order);
-    setDiscussionPoints(points);
-  };
-
-  const focusOnNextDiscussionPoint = (
-    currentIndex: number,
-    startPosition: number,
-    isEndOfLine: boolean,
-  ) => {
-    if (discussionPoints.length > currentIndex + 1) {
-      setFocusElementIndex(currentIndex + 1);
-      setFocusStartPosition(isEndOfLine ? END_OF_LINE_POSITION : startPosition);
-    }
-  };
-
-  const focusOnPreviousDiscussionPoint = (
-    currentIndex: number,
-    startPosition: number,
-    isEndOfLine: boolean,
-  ) => {
-    if (currentIndex - 1 >= 0) {
-      setFocusElementIndex(currentIndex - 1);
-      setFocusStartPosition(isEndOfLine ? END_OF_LINE_POSITION : startPosition);
-    }
+    const items = await service.listForParent(props.spaceID, meetingID);
+    items.sort((a, b) => a.attributes.order - b.attributes.order);
+    setDiscussionPoints(items.map((x) => new DiscussionPointCheckboxText(x)));
   };
 
   useEffect(() => {
@@ -87,40 +79,13 @@ export function DiscussionPointsComponent(
 
   return (
     <div>
-      {discussionPoints.map((discussionPoint, index) => {
-        return (
-          <div key={`discussion-point-${discussionPoint.id}`}>
-            <input type="checkbox" className="lightweight-editor-checkbox" />
-            <DiscussionPointTextareaComponent
-              spaceID={props.spaceID}
-              discussionPoint={discussionPoint}
-              onMoveToNext={(startPosition, isEndOfLine) =>
-                focusOnNextDiscussionPoint(index, startPosition, isEndOfLine)
-              }
-              onMoveToPrevious={(startPosition, isEndOfLine) =>
-                focusOnPreviousDiscussionPoint(
-                  index,
-                  startPosition,
-                  isEndOfLine,
-                )
-              }
-              focusStartPosition={
-                index === focusElementIndex ? focusStartPosition : null
-              }
-            />
-          </div>
-        );
-      })}
-      <textarea
-        ref={newPointElement}
-        value={newDiscussionPointText}
-        className="lightweight-textarea"
-        placeholder="New point"
-        rows={1}
-        cols={100}
-        onChange={(e) => setNewDiscussionPointText(e.target.value)}
-        onKeyDown={(e) => createDiscussionPointOnEnter(e)}
-      ></textarea>
+      <TextareaCheckboxListComponent
+        items={discussionPoints}
+        newItemPlaceholder="New discussion point"
+        onNewItemCreateRequest={createDiscussionPoint}
+        onItemUpdateRequest={updateDiscussionPointText}
+        onCheckboxUpdateRequest={updateDiscussionPointCompleted}
+      />
     </div>
   );
 }
