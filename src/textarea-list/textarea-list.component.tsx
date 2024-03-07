@@ -13,6 +13,7 @@ export interface TextareaListComponentProperties<T extends TextItem> {
   onNewItemCreateRequest: (newItemText: string) => Promise<void>;
   onItemUpdateRequest: (itemID: string, editedText: string) => Promise<void>;
   beforeTextareaElement: React.ReactElement;
+  afterTextareaElement?: React.ReactElement;
 }
 
 export const END_OF_LINE_POSITION = -2;
@@ -85,6 +86,8 @@ export function TextareaListComponent<T extends TextItem>(
                 index === focusElementIndex ? focusStartPosition : null
               }
             />
+            {props.afterTextareaElement &&
+              React.cloneElement(props.afterTextareaElement, { item })}
           </div>
         );
       })}

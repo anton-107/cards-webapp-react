@@ -31,6 +31,7 @@ export function TextareaCheckboxListComponent<T extends TextWithCheckboxItem>(
             }
           />
         }
+        afterTextareaElement={props.afterTextareaElement}
       />
     </div>
   );

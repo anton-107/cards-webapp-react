@@ -178,6 +178,11 @@ a:hover {
 .dropdown-menu.open .simple-button {
   background-color: #e3e3e3;
 }
+.shadow-box {
+  border: 1px solid #2e2e30;
+  padding: 10px;
+  box-shadow: 10px 10px 20px 0px rgba(0, 0, 0, 0.5);
+}
 
 .actions-list {
   list-style-type: none;
@@ -257,6 +262,11 @@ a:hover {
 .lightweight-editor-checkbox {
   display: inline-block;
   vertical-align: middle;
+}
+.textarea-list-additional-controls {
+  padding-left: 25px;
+  font-size: 0.8em;
+  margin-bottom: 1.4em;
 }
 /* calendar */
 .inline-date {

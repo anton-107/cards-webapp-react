@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { SpaceProperties } from "../space/space-props";
 import { TextareaCheckboxListComponent } from "../textarea-list/textarea-checkbox-list.component";
 import { Question, QuestionsService } from "./questions-service";
+import { QuestionControlsComponent } from "./questing-controls.component";
 
-class QuestionCheckboxText {
+export class QuestionCheckboxText {
   public readonly id: string;
 
   constructor(private question: Question) {
@@ -78,6 +79,9 @@ export function OpenQuestionsPage(props: SpaceProperties): React.ReactElement {
               onNewItemCreateRequest={createQuestion}
               onItemUpdateRequest={updateQuestionText}
               onCheckboxUpdateRequest={updateQuestionCrossedOff}
+              afterTextareaElement={
+                <QuestionControlsComponent spaceID={props.spaceID} />
+              }
             />
           </div>
         </div>
