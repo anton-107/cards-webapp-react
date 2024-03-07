@@ -22,6 +22,15 @@ export function LeftMenuLinks(): React.ReactElement {
           People
         </NavLink>
       </li>
+      <li>
+        <NavLink
+          to="/questions"
+          data-testid="people-page-link"
+          className={({ isActive }) => (isActive ? "active-nav-link" : "")}
+        >
+          Open questions
+        </NavLink>
+      </li>
     </ul>
   );
 }

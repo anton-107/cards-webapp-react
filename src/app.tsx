@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { LoginForm } from "./auth/login-form";
 import { UserMenu } from "./auth/user-menu";
 import { SpaceService } from "./space/space-service";
+import { OpenQuestionsPage } from "./open-questions/open-questions.page";
 
 export function App(): React.ReactElement {
   const authService = new AuthService();
@@ -126,6 +127,10 @@ export function App(): React.ReactElement {
                 <Route
                   path="/people-groups"
                   element={<PeopleGroupsPage spaceID={spaceID} />}
+                />
+                <Route
+                  path="/questions"
+                  element={<OpenQuestionsPage spaceID={spaceID} />}
                 />
               </Routes>
             )}

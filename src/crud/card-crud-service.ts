@@ -5,7 +5,9 @@ import {
 
 import { API_ROOT } from "../environment";
 
-type CardAttributes = { [key: string]: string | number | boolean | null };
+type CardAttributes = {
+  [key: string]: string | number | boolean | null | string[];
+};
 
 export interface Card {
   id: string;
