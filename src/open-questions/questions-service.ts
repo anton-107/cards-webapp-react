@@ -5,7 +5,7 @@ export interface Question extends Card {
     isCrossedOff: boolean;
     order: number;
     content: string;
-    recipients: string[];
+    recipients: { [id: string]: string };
   };
 }
 

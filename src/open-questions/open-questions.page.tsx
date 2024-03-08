@@ -3,8 +3,13 @@ import { SpaceProperties } from "../space/space-props";
 import { TextareaCheckboxListComponent } from "../textarea-list/textarea-checkbox-list.component";
 import { Question, QuestionsService } from "./questions-service";
 import { QuestionControlsComponent } from "./questing-controls.component";
+import { PeopleService, Person } from "../people/people-service";
+import {
+  PeopleGroup,
+  PeopleGroupService,
+} from "../people-groups/people-groups-service";
 
-export class QuestionCheckboxText {
+export class QuestionRecord {
   public readonly id: string;
 
   constructor(private question: Question) {
@@ -18,16 +23,35 @@ export class QuestionCheckboxText {
   get isChecked(): boolean {
     return this.question.attributes.isCrossedOff;
   }
+
+  get recipients(): { [id: string]: string } {
+    return this.question.attributes.recipients;
+  }
 }
 
 export function OpenQuestionsPage(props: SpaceProperties): React.ReactElement {
   const service = new QuestionsService();
-  const [questions, setQuestions] = useState<QuestionCheckboxText[]>([]);
+  const [questions, setQuestions] = useState<QuestionRecord[]>([]);
+
+  const [people, setPeople] = useState<Person[]>([]);
+  const [groups, setGroups] = useState<PeopleGroup[]>([]);
+
+  const loadPeople = async () => {
+    const peopleService = new PeopleService();
+    const people = await peopleService.listAll(props.spaceID);
+    setPeople(people);
+  };
+
+  const loadGroups = async () => {
+    const groupsService = new PeopleGroupService();
+    const groups = await groupsService.listAll(props.spaceID);
+    setGroups(groups);
+  };
 
   const loadOpenQuestions = async () => {
     const items = await service.listAll(props.spaceID);
     items.sort((a, b) => a.attributes.order - b.attributes.order);
-    setQuestions(items.map((x) => new QuestionCheckboxText(x)));
+    setQuestions(items.map((x) => new QuestionRecord(x)));
   };
 
   const createQuestion = async (text: string) => {
@@ -38,7 +62,7 @@ export function OpenQuestionsPage(props: SpaceProperties): React.ReactElement {
         isCrossedOff: false,
         order: questions.length + 1,
         content: text,
-        recipients: [],
+        recipients: {},
       },
     });
     loadOpenQuestions();
@@ -63,8 +87,37 @@ export function OpenQuestionsPage(props: SpaceProperties): React.ReactElement {
     });
   };
 
+  const addRecipient = async (questionID: string, person: Person) => {
+    const question = questions.find((x) => x.id === questionID);
+    if (!question) {
+      throw Error(`No such question found ${questionID}`);
+    }
+    question.recipients[person.id] = person.name;
+    await updateRecipients(question);
+  };
+
+  const removeRecipient = async (questionID: string, person: Person) => {
+    const question = questions.find((x) => x.id === questionID);
+    if (!question) {
+      throw Error(`No such question found ${questionID}`);
+    }
+    delete question.recipients[person.id];
+    await updateRecipients(question);
+  };
+
+  const updateRecipients = async (question: QuestionRecord) => {
+    await service.updateAttributes(props.spaceID, question.id, {
+      attributes: {
+        recipients: question.recipients,
+      },
+    });
+    loadOpenQuestions();
+  };
+
   useEffect(() => {
     loadOpenQuestions();
+    loadPeople();
+    loadGroups();
   }, []);
 
   return (
@@ -80,7 +133,13 @@ export function OpenQuestionsPage(props: SpaceProperties): React.ReactElement {
               onItemUpdateRequest={updateQuestionText}
               onCheckboxUpdateRequest={updateQuestionCrossedOff}
               afterTextareaElement={
-                <QuestionControlsComponent spaceID={props.spaceID} />
+                <QuestionControlsComponent
+                  spaceID={props.spaceID}
+                  people={people}
+                  peopleGroups={groups}
+                  onAddRecipient={addRecipient}
+                  onRemoveRecipient={removeRecipient}
+                />
               }
             />
           </div>
