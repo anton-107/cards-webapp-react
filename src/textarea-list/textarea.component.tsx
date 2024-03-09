@@ -87,7 +87,7 @@ export function TextareaComponent(
   return (
     <textarea
       ref={textareaElement}
-      value={editedText || props.value}
+      value={editedText === null ? props.value : editedText}
       onChange={(e) => setEditedText(e.target.value)}
       onKeyDown={(e) => handleKeyDown(e)}
       onBlur={() => debouncedUpdateItem()}
