@@ -72,6 +72,7 @@ export function PersonMeetingsPage(props: SpaceProperties): React.ReactElement {
             />
             <MeetingsListComponent
               meetings={meetings}
+              person={person}
               spaceID={props.spaceID}
               onMeetingDeletionRequest={(meetingID: string) =>
                 deleteMeeting(meetingID)

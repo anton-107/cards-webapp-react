@@ -33,7 +33,6 @@ export function LeftMenuPeopleGroups(
 
   return (
     <div>
-      <h2 className="menu-block menu-header">People</h2>
       <div className="menu-block">
         {groups.map((group: PeopleGroup) => {
           return (
@@ -59,6 +58,7 @@ export function LeftMenuPeopleGroups(
                     );
                   })}
               </ul>
+              <div className="menu-separator"></div>
             </div>
           );
         })}

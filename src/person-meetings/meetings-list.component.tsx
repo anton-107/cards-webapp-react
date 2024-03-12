@@ -6,9 +6,12 @@ import { MeetingsActionsComponent } from "./meetings-actions.component";
 import { MeetingDateComponent } from "./meeting-date.component";
 import { MeetingsNotesComponent } from "./meeting-notes/meeting-notes.component";
 import { ActionItemsComponent } from "./action-items/action-items.component";
+import { OpenQuestionsInPersonMeetingComponent } from "./open-questions/open-questions-in-person-meeting.component";
+import { Person } from "../people/people-service";
 
 interface MeetingsListComponentProperties extends SpaceProperties {
   meetings: Meeting[];
+  person: Person;
   onMeetingDeletionRequest: (meetingID: string) => void;
   onMeetingStartDateChangeRequest: (meetingID: string, newDate: number) => void;
 }
@@ -51,6 +54,11 @@ export function MeetingsListComponent(
             <DiscussionPointsComponent
               meeting={meeting}
               spaceID={props.spaceID}
+            />
+            <h4>Open questions:</h4>
+            <OpenQuestionsInPersonMeetingComponent
+              spaceID={props.spaceID}
+              personID={props.person.id}
             />
             <h3>Notes</h3>
             <MeetingsNotesComponent meeting={meeting} spaceID={props.spaceID} />
