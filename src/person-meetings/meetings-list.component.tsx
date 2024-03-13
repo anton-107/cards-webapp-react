@@ -58,7 +58,7 @@ export function MeetingsListComponent(
             <h4>Open questions:</h4>
             <OpenQuestionsInPersonMeetingComponent
               spaceID={props.spaceID}
-              personID={props.person.id}
+              person={props.person}
             />
             <h3>Notes</h3>
             <MeetingsNotesComponent meeting={meeting} spaceID={props.spaceID} />

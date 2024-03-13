@@ -6,6 +6,7 @@ export interface Question extends Card {
     order: number;
     content: string;
     recipients: { [id: string]: string };
+    answers: { [recipientID: string]: string };
   };
 }
 

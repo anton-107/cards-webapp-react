@@ -17,7 +17,7 @@ body {
   color: #fff;
   width: 250px;
   height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .content {
   flex: 1;
@@ -78,6 +78,13 @@ h3.menu-header {
 .form-field-block,
 .content-section {
   margin-bottom: 18px;
+}
+.form-section {
+  padding-left: 30px;
+}
+.section-detail {
+  margin: 5px 0;
+  font-size: 0.8em;
 }
 .top-bar {
   border-bottom: 1px solid #eceae9;
@@ -263,6 +270,12 @@ a:hover {
   border-bottom: 1px solid #b0abac;
   padding: 3px;
 }
+.single-textarea-wrapper {
+  display: inline-block;
+  border-bottom: 1px solid #b0abac;
+  padding: 4px 0;
+  margin-bottom: 8px;
+}
 .lightweight-editor-checkbox {
   border-bottom: none;
   vertical-align: middle;
@@ -297,4 +310,10 @@ a:hover {
   padding: 5px;
   border-radius: 4px;
   background-color: #b0abac;
+}
+.section-detail .inline-tag {
+  padding: 3px 5px;
+}
+.highlighted-tag {
+  background-color: #007bff;
 }

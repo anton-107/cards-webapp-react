@@ -63,6 +63,7 @@ export function OpenQuestionsPage(props: SpaceProperties): React.ReactElement {
         order: questions.length + 1,
         content: text,
         recipients: {},
+        answers: {},
       },
     });
     loadOpenQuestions();

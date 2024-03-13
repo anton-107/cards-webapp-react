@@ -48,7 +48,14 @@ export function QuestionControlsComponent(
       Recipients:{" "}
       {props.item &&
         Object.values(props.item.recipients).map((recipient) => {
-          return <span className="inline-tag">{recipient}</span>;
+          return (
+            <span
+              className="inline-tag"
+              key={`recipient-${props.item?.id}-${recipient}`}
+            >
+              {recipient}
+            </span>
+          );
         })}
       <button
         className="simple-button"
